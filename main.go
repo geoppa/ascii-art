@@ -9,28 +9,27 @@ import (
 
 func main() {
 	var input string
+	// check the number of args (must be 2)
 	if len(os.Args) < 2 {
 		input = "No Arguments..."
-		//return
-	} else if len(os.Args) > 2 {
-		fmt.Println("Too Many Arguments. Printing Only the 1st")
-		input = os.Args[1]
 	} else {
+		if len(os.Args) > 2 {
+			fmt.Println("Too Many Arguments. Printing Only the 1st")
+		}
 		input = os.Args[1]
 	}
-
 	// if the argument is "" exit without printing anything
 	if input == "" {
 		return
 	}
-
+	// read the file with the ascii art
 	lines, err := readBanner("standard.txt")
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 		return
 	}
 
-	// split input by literal newline characters
+	// split input in parts by newline characters
 	parts := strings.Split(input, "\\n")
 
 	// if the input is only "\n" print newlines
@@ -41,14 +40,12 @@ func main() {
 			break
 		}
 	}
-
 	if onlyNewlines {
 		for i := 0; i < len(parts)-1; i++ {
 			fmt.Println()
 		}
 		return
 	}
-
 	for _, part := range parts {
 		if part == "" {
 			fmt.Println()
@@ -79,12 +76,15 @@ func readBanner(bannerName string) ([]string, error) {
 	}
 	defer file.Close()
 
+	// create an empty slice of strings (lines) to store the content of the file
 	var lines []string
+	// read through the file line by line
 	scanner := bufio.NewScanner(file)
 
+	// add the text of every line to our lines slice
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-
+	// return the full list of lines
 	return lines, scanner.Err()
 }
